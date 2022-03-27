@@ -37,18 +37,24 @@ pipeline {
                 }
             }
         }
-		stage('Login') {
+        stage('Login') {
 
-			steps {
-				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-			}
-		}
+                steps {
+                        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                }
+        }
 
-		stage('Push') {
+        stage('Push') {
 
-			steps {
-				sh 'docker push infinitengine/spring-petclinic-pipeline:latest'
-			}
-		}
+                steps {
+                        sh 'docker push infinitengine/spring-petclinic-pipeline:latest'
+                }
+        }
+        stage('Remove Unused docker image') {
+              steps {
+                sh "docker rmi $registry:latest"
+              }
+        }
+  }
     }
 }
