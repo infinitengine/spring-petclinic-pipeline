@@ -5,6 +5,7 @@ pipeline {
         registry = "infinitengine/spring-petclinic-pipeline"
         registryCredential = 'infinitengine'
         dockerImage = ''
+        DOCKERHUB_CREDENTIALS=credentials('infinitengine')
     }
   
     stages {
@@ -25,7 +26,7 @@ pipeline {
                 }
             }
         }
-        stage('Build Docker Image') {
+        stage('Build Docker Image') {https://hub.docker.com/repository/docker/infinitengine/spring-petclinic-pipeline
             when {
                 branch 'main'
             }
@@ -36,14 +37,18 @@ pipeline {
                 }
             }
         }
-        stage('Deploy Image') {
-            steps{
-                script {
-                    docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-                    dockerImage.push()
-                    }
-                }
-            }
-        }
+		stage('Login') {
+
+			steps {
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+			}
+		}
+
+		stage('Push') {
+
+			steps {
+				sh 'docker push infinitengine/spring-petclinic-pipeline:latest'
+			}
+		}
     }
 }
