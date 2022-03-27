@@ -2,19 +2,32 @@ pipeline {
     agent any
   
     stages {
-        stage('Build') {
+        stage('Build Application') { 
             steps {
-                sh 'mvn compile' //only compilation of the code
+                echo '=== Building Petclinic Application ==='
+                sh 'mvn -B -DskipTests clean package' 
             }
         }
-        stage('Test') {
+        stage('Test Application') {
             steps {
-                echo 'Testing'
+                echo '=== Testing Petclinic Application ==='
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
             }
         }
-        stage('Deploy') {
+        stage('Build Docker Image') {
+            when {
+                branch 'master'
+            }
             steps {
-                echo 'Deploying'
+                echo '=== Building Petclinic Docker Image ==='
+                script {
+                    app = docker.build("infinitengine/spring-petclinic-pipeline")
+                }
             }
         }
     }
