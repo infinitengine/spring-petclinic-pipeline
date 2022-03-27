@@ -4,8 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                ./mvnw package
-                java -jar target/*.jar
+                sh 'mvn compile' //only compilation of the code
             }
         }
         stage('Test') {
