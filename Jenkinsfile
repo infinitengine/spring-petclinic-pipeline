@@ -55,6 +55,5 @@ pipeline {
                 sh "docker rmi $registry:latest"
               }
         }
-  }
     }
 }
