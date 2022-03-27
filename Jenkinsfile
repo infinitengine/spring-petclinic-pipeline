@@ -30,5 +30,12 @@ pipeline {
                 }
             }
         }
+        stage('Deploy Image') {
+            steps{
+                script {
+                    dockerImage.push()
+                }
+            }
+        }
     }
 }
