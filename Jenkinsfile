@@ -4,7 +4,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building'
+                ./mvnw package
+                java -jar target/*.jar
             }
         }
         stage('Test') {
