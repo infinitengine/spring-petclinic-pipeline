@@ -1,5 +1,11 @@
 pipeline {
     agent any
+    
+    environment {
+        registry = "infinitengine/spring-petclinic-pipeline"
+        registryCredential = 'infinitengine'
+        dockerImage = ''
+    }
   
     stages {
         stage('Build Application') { 
