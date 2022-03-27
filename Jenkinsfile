@@ -50,10 +50,5 @@ pipeline {
                         sh 'docker push infinitengine/spring-petclinic-pipeline:latest'
                 }
         }
-        stage('Remove Unused docker image') {
-              steps {
-                sh "docker rmi $registry:latest"
-              }
-        }
     }
 }
