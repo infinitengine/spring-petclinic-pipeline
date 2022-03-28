@@ -12,6 +12,15 @@ pipeline {
     }
   
     stages {
+         stage ('Artifactory configuration') {
+            steps {
+                rtServer (
+                    id: 'artifactory',
+                    url: '151.139.55.51:8082/'
+                    credentialsId: credentials('artifactory-access-token')
+                )
+            }
+        }
         stage('Build Application') { 
             steps {
                 echo '=== Building Petclinic Application ==='
@@ -55,7 +64,7 @@ pipeline {
         stage ('Push image to Artifactory') {
             steps {
                 rtDockerPush(
-                    serverId: artifactory,
+                    serverId: 'artifactory',
                     image: 'infinitengine/spring-petclinic-pipeline:latest',
                     // Host:
                     // On OSX: "tcp://127.0.0.1:1234"
