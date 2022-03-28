@@ -53,7 +53,9 @@ pipeline {
             }
         }
         stage('Push image to Artifactory') {
-            rtDocker.push ARTIFACTORY_DOCKER_REGISTRY + 'infinitengine/spring-petclinic-pipeline:latest', 'spring-petclinic-pipeline', buildInfo
+            steps {
+                rtDocker.push ARTIFACTORY_DOCKER_REGISTRY + 'infinitengine/spring-petclinic-pipeline:latest', 'spring-petclinic-pipeline', buildInfo
+            }
         }      
         stage('Remove Unused docker image') {
               steps {
