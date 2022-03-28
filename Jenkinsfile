@@ -6,6 +6,8 @@ pipeline {
         registryCredential = 'infinitengine'
         dockerImage = ''
         DOCKERHUB_CREDENTIALS=credentials('infinitengine')
+        ARTIFACTORY_ACCESS_TOKEN=crendentials('artifactory-access-token')
+        CI = true
     }
   
     stages {
@@ -43,13 +45,20 @@ pipeline {
                     sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                 }
         }
-
         stage('Push to Docker Hub') {
                 steps {
                     echo '=== Pushing Image to Docker Hub ==='
                     sh 'docker push infinitengine/spring-petclinic-pipeline:latest'
                 }
         }
+        stage('Push to Artifactory') {
+            agent {
+                docker {
+                    image 'infinitengine/spring-petclinic-pipeline:latest'
+                    reuseNode true
+                }
+            }
+        }                    
         stage('Remove Unused docker image') {
               steps {
                     echo '=== Removing Local Image ==='
