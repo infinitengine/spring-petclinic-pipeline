@@ -7,6 +7,7 @@ pipeline {
         dockerImage = ''
         DOCKERHUB_CREDENTIALS=credentials('infinitengine')
         ARTIFACTORY_ACCESS_TOKEN=credentials('artifactory-access-token')
+        ARTIFACTORY_DOCKER_REGISTRY='151.139.55.51:8082/'
         CI = true
     }
   
