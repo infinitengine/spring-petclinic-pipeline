@@ -58,6 +58,9 @@ pipeline {
                     reuseNode true
                 }
             }
+            steps {
+                sh 'jfrog rt upload --url http://151.139.55.51:8082/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} target/spring-petclinic-2.6.0-SNAPSHOT.jar Spring_Pet_Clinic_Pipeline/'
+            }
         }                    
         stage('Remove Unused docker image') {
               steps {
