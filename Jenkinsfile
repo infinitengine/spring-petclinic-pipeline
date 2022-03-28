@@ -6,7 +6,7 @@ pipeline {
         registryCredential = 'infinitengine'
         dockerImage = ''
         DOCKERHUB_CREDENTIALS=credentials('infinitengine')
-        ARTIFACTORY_ACCESS_TOKEN=crendentials('artifactory-access-token')
+        ARTIFACTORY_ACCESS_TOKEN=credentials('artifactory-access-token')
         CI = true
     }
   
@@ -50,7 +50,18 @@ pipeline {
                     echo '=== Pushing Image to Docker Hub ==='
                     sh 'docker push infinitengine/spring-petclinic-pipeline:latest'
                 }
-        }             
+        }
+        stage('Push to Artifactory') {
+           agent {
+               docker {
+                   image 'infinitengine/spring-petclinic-pipeline:latest'
+                   reuseNode true
+               }
+           }
+           steps {
+               sh 'jfrog rt upload --url http://151.139.55.51:8082/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} target/spring-petclinic-2.6.0-SNAPSHOT.jar Spring_Pet_Clinic_Pipeline/'
+           }
+        }      
         stage('Remove Unused docker image') {
               steps {
                     echo '=== Removing Local Image ==='
