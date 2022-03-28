@@ -52,11 +52,21 @@ pipeline {
                 sh 'docker push infinitengine/spring-petclinic-pipeline:latest'
             }
         }
-        stage('Push image to Artifactory') {
+        stage ('Push image to Artifactory') {
             steps {
-                rtDocker.push ARTIFACTORY_DOCKER_REGISTRY + 'infinitengine/spring-petclinic-pipeline:latest', 'spring-petclinic-pipeline', buildInfo
+                rtDockerPush(
+                    serverId: artifactory,
+                    image: infinitengine/spring-petclinic-pipeline:latest',
+                    // Host:
+                    // On OSX: "tcp://127.0.0.1:1234"
+                    // On Linux can be omitted or null
+                    // host: HOST_NAME,
+                    targetRepo: 'spring-petclinic-pipeline'
+                    // Attach custom properties to the published artifacts:
+                    // properties: 'project-name=docker1;status=stable'
+                )
             }
-        }      
+        }   
         stage('Remove Unused docker image') {
               steps {
                     echo '=== Removing Local Image ==='
