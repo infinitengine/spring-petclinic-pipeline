@@ -6,21 +6,9 @@ pipeline {
         registryCredential = 'infinitengine'
         dockerImage = ''
         DOCKERHUB_CREDENTIALS=credentials('infinitengine')
-        ARTIFACTORY_ACCESS_TOKEN=credentials('artifactory-access-token')
-        ARTIFACTORY_DOCKER_REGISTRY='151.139.55.51:8082/'
-        CI = true
     }
   
     stages {
-         stage ('Artifactory configuration') {
-            steps {
-                rtServer (
-                    id: 'artifactory',
-                    url: '151.139.55.51:8082/'
-                    credentialsId: credentials('artifactory-access-token')
-                )
-            }
-        }
         stage('Build Application') { 
             steps {
                 echo '=== Building Petclinic Application ==='
@@ -61,21 +49,6 @@ pipeline {
                 sh 'docker push infinitengine/spring-petclinic-pipeline:latest'
             }
         }
-        stage ('Push image to Artifactory') {
-            steps {
-                rtDockerPush(
-                    serverId: 'artifactory',
-                    image: 'infinitengine/spring-petclinic-pipeline:latest',
-                    // Host:
-                    // On OSX: "tcp://127.0.0.1:1234"
-                    // On Linux can be omitted or null
-                    // host: HOST_NAME,
-                    targetRepo: 'spring-petclinic-pipeline'
-                    // Attach custom properties to the published artifacts:
-                    // properties: 'project-name=docker1;status=stable'
-                )
-            }
-        }   
         stage('Remove Unused docker image') {
               steps {
                     echo '=== Removing Local Image ==='
