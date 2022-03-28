@@ -41,18 +41,18 @@ pipeline {
             }
         }
         stage('Login to Docker Hub') {
-                steps {
-                    echo '=== Logging in to Docker Hub ==='
-                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                }
+            steps {
+                echo '=== Logging in to Docker Hub ==='
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
         }
         stage('Push to Docker Hub') {
-                steps {
-                    echo '=== Pushing Image to Docker Hub ==='
-                    sh 'docker push infinitengine/spring-petclinic-pipeline:latest'
-                }
+            steps {
+                echo '=== Pushing Image to Docker Hub ==='
+                sh 'docker push infinitengine/spring-petclinic-pipeline:latest'
+            }
         }
-        stage ('Push image to Artifactory') {
+        stage('Push image to Artifactory') {
             rtDocker.push ARTIFACTORY_DOCKER_REGISTRY + 'infinitengine/spring-petclinic-pipeline:latest', 'spring-petclinic-pipeline', buildInfo
         }      
         stage('Remove Unused docker image') {
