@@ -51,16 +51,8 @@ pipeline {
                     sh 'docker push infinitengine/spring-petclinic-pipeline:latest'
                 }
         }
-        stage('Push to Artifactory') {
-           agent {
-               docker {
-                   image 'infinitengine/spring-petclinic-pipeline:latest'
-                   reuseNode true
-               }
-           }
-           steps {
-               sh 'jfrog rt upload --url 151.139.55.51:8082/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} target/spring-petclinic-2.6.0-SNAPSHOT.jar Spring_Pet_Clinic_Pipeline/'
-           }
+        stage ('Push image to Artifactory') {
+            rtDocker.push ARTIFACTORY_DOCKER_REGISTRY + 'infinitengine/spring-petclinic-pipeline:latest', 'spring-petclinic-pipeline', buildInfo
         }      
         stage('Remove Unused docker image') {
               steps {
