@@ -53,7 +53,7 @@ pipeline {
             }
         }
         stage('Push image to Artifactory') {
-            script {
+            steps {
                 rtDocker.push ARTIFACTORY_DOCKER_REGISTRY + 'infinitengine/spring-petclinic-pipeline:latest', 'spring-petclinic-pipeline', buildInfo
             }
         }      
