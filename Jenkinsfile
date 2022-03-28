@@ -50,17 +50,6 @@ pipeline {
                     sh 'docker push infinitengine/spring-petclinic-pipeline:latest'
                 }
         }
-        stage ('Push image to Artifactory') { // take that image and push to artifactory
-            steps {
-                rtDockerPush(
-                    serverId: "local-repo",
-                    image: "151.139.55.51:8082/infinitengine/spring-petclinic-pipeline:latest",
-                    targetRepo: 'local-repo', // where to copy to (from docker-virtual)
-                    // Attach custom properties to the published artifacts:
-                    properties: 'project-name=spring-petclinic-pipeline;status=stable'
-                )
-            }
-        }
         stage('Remove Unused docker image') {
               steps {
                     echo '=== Removing Local Image ==='
